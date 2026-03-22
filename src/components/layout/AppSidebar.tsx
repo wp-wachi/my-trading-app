@@ -50,7 +50,7 @@ const NAV_ITEMS: SidebarItem[] = [
 
 export function AppSidebar({ activeItem }: AppSidebarProps): React.JSX.Element {
   return (
-    <aside className="hidden min-h-screen w-64 flex-col bg-surface_container_lowest px-4 py-6 md:flex">
+    <aside className="hidden min-h-screen w-64 min-w-64 shrink-0 basis-64 flex-col bg-surface_container_lowest px-4 py-6 md:flex">
       <div className="mb-8 px-2">
         <div className="flex items-center gap-3">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-[0.2rem] bg-primary_container text-on_primary_fixed">

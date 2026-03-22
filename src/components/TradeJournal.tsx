@@ -418,7 +418,7 @@ function ActivityToast(): React.JSX.Element {
 export function TradeJournal(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-surface text-on_surface">
-      <div className="mx-auto flex max-w-[1440px]">
+      <div className="flex min-h-screen">
         <AppSidebar activeItem="trade-journal" />
 
         <main className="w-full px-6 pb-8 md:px-8 lg:px-10">
