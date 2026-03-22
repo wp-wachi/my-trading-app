@@ -15,7 +15,7 @@ export function Dashboard() {
           <div className="flex gap-10">
             <Link
               href="#"
-              className="text-white font-semibold border-b-2 border-primary_container pb-1"
+              className="rounded-md bg-surface_container_highest px-3 py-1.5 font-semibold text-primary_container"
             >
               MARKET
             </Link>

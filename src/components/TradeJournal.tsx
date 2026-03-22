@@ -228,7 +228,7 @@ function Filters(): React.JSX.Element {
           size={14}
         />
         <input
-          className="w-full rounded-md bg-surface_container px-9 py-2.5 text-sm text-on_surface placeholder:text-[#6f7680] outline-none"
+          className="w-full rounded-md bg-surface_container_low px-9 py-2.5 text-sm text-on_surface placeholder:text-[#6f7680] outline-none transition focus:bg-surface_container_highest focus:ring-1 focus:ring-primary_container/20"
           placeholder="Search assets..."
           type="text"
         />
@@ -302,7 +302,7 @@ function TradeTableRow({ row }: { row: TradeRow }): React.JSX.Element {
       : "bg-surface_container_high text-[#9da6af]";
 
   return (
-    <div className="grid grid-cols-[1.2fr_1fr_0.65fr_1fr_1fr_0.9fr_0.85fr_0.55fr] items-center px-4 py-5 text-sm text-on_surface hover:bg-surface_container_highest/30">
+    <div className="grid grid-cols-[1.2fr_1fr_0.65fr_1fr_1fr_0.9fr_0.85fr_0.55fr] items-center rounded-md bg-surface_container px-4 py-5 text-sm text-on_surface transition hover:bg-surface_container_highest/40">
       <div>
         <p className="text-[1rem] text-[#b7bfc7]">{row.date}</p>
         <p className="text-[1rem] text-[#b7bfc7]">{row.time}</p>
@@ -351,7 +351,7 @@ function TradeTable(): React.JSX.Element {
   return (
     <section className="mt-6 overflow-hidden rounded-lg bg-surface_container_lowest/55">
       <TradeTableHeader />
-      <div className="divide-y divide-[#1a2028]">
+      <div className="space-y-2 px-2 pb-2">
         {trades.map((row) => (
           <TradeTableRow
             key={`${row.date}-${row.time}-${row.asset}`}

@@ -38,5 +38,5 @@
 body {
   background: var(--surface);
   color: var(--on-surface);
-  font-family: "Inter", "Space Grotesk", Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
 }
