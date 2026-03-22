@@ -20,7 +20,7 @@ export function Dashboard() {
         </div>
         <nav className="flex flex-col gap-2 flex-1">
           <Link
-            href="#"
+            href="/"
             className="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface_container_highest text-white font-medium"
           >
             {/* Dashboard Icon Placeholder */}
@@ -28,7 +28,7 @@ export function Dashboard() {
             Dashboard
           </Link>
           <Link
-            href="#"
+            href="/trade-journal"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-on_surface_variant hover:bg-surface_container_high"
           >
             <span className="w-5 h-5 bg-surface_container rounded" />
