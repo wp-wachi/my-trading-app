@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   BookOpen,
   Bot,
+  FileJson,
   HelpCircle,
   LayoutDashboard,
   LineChart,
@@ -12,7 +13,12 @@ import { Button } from "@/components/ui/Button";
 import type { ReactNode } from "react";
 
 interface SidebarItem {
-  key: "dashboard" | "trade-journal" | "add-trade" | "analytics";
+  key:
+    | "dashboard"
+    | "trade-journal"
+    | "add-trade"
+    | "analytics"
+    | "import-trades";
   label: string;
   href: string;
   icon: ReactNode;
@@ -46,6 +52,12 @@ const NAV_ITEMS: SidebarItem[] = [
     label: "Analytics",
     href: "#",
     icon: <LineChart size={16} />,
+  },
+  {
+    key: "import-trades",
+    label: "Import Trades",
+    href: "/import-trades",
+    icon: <FileJson size={16} />,
   },
 ];
 
