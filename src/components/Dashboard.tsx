@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { AppSidebar } from "@/components/layout/AppSidebar";
+import { Button } from "@/components/ui/Button";
 
 export function Dashboard() {
   return (
@@ -212,9 +213,9 @@ export function Dashboard() {
                 Systematic logging is the difference between gambling and
                 professional trading.
               </div>
-              <button className="w-full py-3 rounded-lg font-semibold text-on_primary_fixed bg-gradient-to-r from-primary_container to-primary_fixed_dim hover:from-primary_fixed_dim hover:to-primary_container transition">
+              <Button fullWidth variant="primary">
                 Journal your next trade
-              </button>
+              </Button>
             </section>
             {/* Risk Exposure */}
             <section className="bg-surface_container rounded-xl p-6 flex flex-col gap-3">

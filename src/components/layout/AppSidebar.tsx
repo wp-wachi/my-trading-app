@@ -8,6 +8,7 @@ import {
   LogOut,
   Plus,
 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import type { ReactNode } from "react";
 
 interface SidebarItem {
@@ -88,12 +89,9 @@ export function AppSidebar({ activeItem }: AppSidebarProps): React.JSX.Element {
       </nav>
 
       <div className="mt-auto space-y-6 px-2">
-        <button
-          className="w-full rounded-md bg-primary_container px-4 py-2.5 text-sm font-semibold text-on_primary_fixed transition hover:bg-primary_fixed_dim"
-          type="button"
-        >
+        <Button fullWidth variant="primary" size="sm">
           Deposit Funds
-        </button>
+        </Button>
 
         <div className="space-y-3 pb-2">
           <button

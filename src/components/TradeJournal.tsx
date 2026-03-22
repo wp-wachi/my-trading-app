@@ -12,6 +12,7 @@ import {
   Settings,
 } from "lucide-react";
 import { AppSidebar } from "@/components/layout/AppSidebar";
+import { Button } from "@/components/ui/Button";
 
 interface MetricCardProps {
   title: string;
@@ -133,12 +134,13 @@ function TopNavigation(): React.JSX.Element {
           <button type="button">
             <Settings size={16} />
           </button>
-          <button
-            className="flex h-8 w-8 items-center justify-center rounded-[0.55rem] bg-[#f1cda4] text-[#7a4f2a]"
-            type="button"
+          <Button
+            className="h-8 w-8 rounded-[0.55rem] bg-[#f1cda4] text-[#7a4f2a] hover:bg-[#f3d7b6] hover:text-[#7a4f2a]"
+            size="icon"
+            variant="icon"
           >
             <FileText size={14} />
-          </button>
+          </Button>
         </div>
       </div>
     </header>
@@ -234,36 +236,24 @@ function Filters(): React.JSX.Element {
         />
       </div>
 
-      <button
-        className="inline-flex items-center gap-2 rounded-md bg-surface_container px-3.5 py-2.5 text-sm text-on_surface"
-        type="button"
-      >
+      <Button size="sm" variant="surface">
         <CalendarDays size={14} />
         Last 30 Days
-      </button>
+      </Button>
 
-      <button
-        className="inline-flex items-center gap-2 rounded-md bg-surface_container px-3.5 py-2.5 text-sm text-on_surface"
-        type="button"
-      >
+      <Button size="sm" variant="surface">
         <LineChart size={14} />
         All Assets
-      </button>
+      </Button>
 
-      <button
-        className="inline-flex items-center justify-center rounded-md bg-surface_container p-2.5 text-[#97a1ac]"
-        type="button"
-      >
+      <Button className="text-[#97a1ac]" size="icon" variant="icon">
         <MoreVertical size={16} />
-      </button>
+      </Button>
 
-      <button
-        className="ml-0 inline-flex items-center justify-center gap-2 rounded-md bg-primary_container px-5 py-2.5 text-sm font-semibold text-on_primary_fixed transition hover:bg-primary_fixed_dim lg:ml-auto"
-        type="button"
-      >
+      <Button className="ml-0 lg:ml-auto" size="sm" variant="primary">
         <Plus size={14} />
         Log New Trade
-      </button>
+      </Button>
     </section>
   );
 }
@@ -368,36 +358,41 @@ function Pagination(): React.JSX.Element {
     <section className="mt-4 flex items-center justify-between">
       <p className="text-xs text-[#73808c]">Showing 1 to 5 of 142 trades</p>
       <div className="flex items-center gap-1">
-        <button
-          className="inline-flex h-7 w-7 items-center justify-center rounded bg-surface_container text-[#8b94a0]"
-          type="button"
+        <Button
+          className="h-7 w-7 rounded text-[#8b94a0]"
+          size="icon"
+          variant="surface"
         >
           <ChevronLeft size={14} />
-        </button>
-        <button
-          className="inline-flex h-7 w-7 items-center justify-center rounded bg-primary_container text-on_primary_fixed"
-          type="button"
+        </Button>
+        <Button
+          className="h-7 w-7 rounded shadow-none"
+          size="icon"
+          variant="primary"
         >
           1
-        </button>
-        <button
-          className="inline-flex h-7 w-7 items-center justify-center rounded bg-surface_container text-[#8b94a0]"
-          type="button"
+        </Button>
+        <Button
+          className="h-7 w-7 rounded text-[#8b94a0]"
+          size="icon"
+          variant="surface"
         >
           2
-        </button>
-        <button
-          className="inline-flex h-7 w-7 items-center justify-center rounded bg-surface_container text-[#8b94a0]"
-          type="button"
+        </Button>
+        <Button
+          className="h-7 w-7 rounded text-[#8b94a0]"
+          size="icon"
+          variant="surface"
         >
           3
-        </button>
-        <button
-          className="inline-flex h-7 w-7 items-center justify-center rounded bg-surface_container text-[#8b94a0]"
-          type="button"
+        </Button>
+        <Button
+          className="h-7 w-7 rounded text-[#8b94a0]"
+          size="icon"
+          variant="surface"
         >
           <ChevronRight size={14} />
-        </button>
+        </Button>
       </div>
     </section>
   );
