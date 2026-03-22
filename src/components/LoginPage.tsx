@@ -17,7 +17,10 @@ function BrandHeader(): React.JSX.Element {
   return (
     <header className="mb-12 text-center">
       <div className="mb-2 inline-flex items-center gap-3">
-        <Terminal className="h-8 w-8 text-primary_container" strokeWidth={2.4} />
+        <Terminal
+          className="h-8 w-8 text-primary_container"
+          strokeWidth={2.4}
+        />
         <h1 className="font-display text-4xl font-bold tracking-tight text-on_surface">
           Kinetic <span className="text-primary_container">Vault</span>
         </h1>
@@ -169,13 +172,22 @@ function FooterLinks(): React.JSX.Element {
       </p>
 
       <div className="flex items-center justify-center gap-6 border-t border-[color:var(--outline-variant)]/5 pt-4">
-        <Link className="text-[0.625rem] uppercase tracking-[0.14em] text-on_surface_variant/50 hover:text-on_surface" href="#">
+        <Link
+          className="text-[0.625rem] uppercase tracking-[0.14em] text-on_surface_variant/50 hover:text-on_surface"
+          href="#"
+        >
           Privacy Protocol
         </Link>
-        <Link className="text-[0.625rem] uppercase tracking-[0.14em] text-on_surface_variant/50 hover:text-on_surface" href="#">
+        <Link
+          className="text-[0.625rem] uppercase tracking-[0.14em] text-on_surface_variant/50 hover:text-on_surface"
+          href="#"
+        >
           System Status
         </Link>
-        <Link className="text-[0.625rem] uppercase tracking-[0.14em] text-on_surface_variant/50 hover:text-on_surface" href="#">
+        <Link
+          className="text-[0.625rem] uppercase tracking-[0.14em] text-on_surface_variant/50 hover:text-on_surface"
+          href="#"
+        >
           Support
         </Link>
       </div>

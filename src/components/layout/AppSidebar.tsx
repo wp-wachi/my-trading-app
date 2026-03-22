@@ -38,7 +38,7 @@ const NAV_ITEMS: SidebarItem[] = [
   {
     key: "add-trade",
     label: "Add Trade",
-    href: "#",
+    href: "/add-trade",
     icon: <Plus size={16} />,
   },
   {
