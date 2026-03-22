@@ -1,26 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Surface & background tokens */
+  --surface: #111417;
+  --surface-container-lowest: #0b0e11;
+  --surface-container-low: #16191c;
+  --surface-container: #1d2023;
+  --surface-container-high: #232629;
+  --surface-container-highest: #323538;
+  --surface-bright: rgba(255, 255, 255, 0.08);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Action & accent colors */
+  --primary-container: #00f296;
+  --primary-fixed: #00f296;
+  --primary-fixed-dim: #00e38c;
+  --secondary-container: #ff3b6a;
+  --tertiary-container: #2e9fff;
+  --surface-tint: #00f296;
+
+  /* Text colors */
+  --on-surface: #ededed;
+  --on-surface-variant: #b0b3b8;
+  --on-primary-fixed: #111417;
+  --on-secondary-container: #fff;
+  --on-tertiary-container: #fff;
+
+  /* Outline & shadow */
+  --outline-variant: #ededed;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* No change needed, already dark by default */
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: "Inter", "Space Grotesk", Arial, Helvetica, sans-serif;
 }
