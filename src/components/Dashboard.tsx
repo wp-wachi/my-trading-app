@@ -1,68 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { AppSidebar } from "@/components/layout/AppSidebar";
 
 export function Dashboard() {
   return (
     <div className="flex min-h-screen bg-surface text-on_surface font-sans">
-      {/* Sidebar */}
-      <aside className="w-64 flex flex-col bg-surface_container_lowest px-6 py-8">
-        <div className="mb-10">
-          <div
-            className="text-primary_container text-2xl font-bold"
-            style={{ fontFamily: "Space Grotesk, sans-serif" }}
-          >
-            Kinetic Vault
-          </div>
-          <div className="text-on_surface_variant text-xs mt-1 tracking-wide">
-            PRO TRADER TIER
-          </div>
-        </div>
-        <nav className="flex flex-col gap-2 flex-1">
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface_container_highest text-white font-medium"
-          >
-            {/* Dashboard Icon Placeholder */}
-            <span className="w-5 h-5 bg-primary_container rounded" />
-            Dashboard
-          </Link>
-          <Link
-            href="/trade-journal"
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-on_surface_variant hover:bg-surface_container_high"
-          >
-            <span className="w-5 h-5 bg-surface_container rounded" />
-            Trade Journal
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-on_surface_variant hover:bg-surface_container_high"
-          >
-            <span className="w-5 h-5 bg-surface_container rounded" />
-            Add Trade
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-on_surface_variant hover:bg-surface_container_high"
-          >
-            <span className="w-5 h-5 bg-surface_container rounded" />
-            Analytics
-          </Link>
-        </nav>
-        <button className="mt-8 mb-4 w-full py-3 rounded-lg font-semibold text-on_primary_fixed bg-primary_container hover:bg-primary_fixed_dim transition">
-          Deposit Funds
-        </button>
-        <div className="flex flex-col gap-2 mt-auto">
-          <button className="flex items-center gap-2 text-on_surface_variant text-sm hover:text-white">
-            <span className="w-4 h-4 bg-surface_container rounded" />
-            Support
-          </button>
-          <button className="flex items-center gap-2 text-on_surface_variant text-sm hover:text-white">
-            <span className="w-4 h-4 bg-surface_container rounded" />
-            Sign Out
-          </button>
-        </div>
-      </aside>
+      <AppSidebar activeItem="dashboard" />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col bg-surface px-10 py-8">

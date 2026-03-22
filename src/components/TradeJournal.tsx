@@ -1,20 +1,17 @@
 import Link from "next/link";
 import {
   Bell,
-  BookOpen,
-  Bot,
   CalendarDays,
   ChevronLeft,
   ChevronRight,
   FileText,
-  LayoutDashboard,
   LineChart,
-  LogOut,
   MoreVertical,
   Plus,
   Search,
   Settings,
 } from "lucide-react";
+import { AppSidebar } from "@/components/layout/AppSidebar";
 
 interface MetricCardProps {
   title: string;
@@ -99,89 +96,6 @@ const trades: TradeRow[] = [
     symbol: "S",
   },
 ];
-
-function SidebarItem({
-  icon,
-  label,
-  active,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  active?: boolean;
-}): React.JSX.Element {
-  return (
-    <button
-      className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm transition ${
-        active
-          ? "bg-surface_container text-primary_container"
-          : "text-[#6f7680] hover:bg-surface_container hover:text-on_surface"
-      }`}
-      type="button"
-    >
-      <span className="opacity-90">{icon}</span>
-      <span className="font-medium">{label}</span>
-    </button>
-  );
-}
-
-function Sidebar(): React.JSX.Element {
-  return (
-    <aside className="hidden min-h-screen w-64 flex-col bg-surface_container_lowest px-4 py-6 md:flex">
-      <div className="mb-8 px-2">
-        <div className="flex items-center gap-3">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-[0.2rem] bg-primary_container text-on_primary_fixed">
-            <Bot size={16} />
-          </span>
-          <div>
-            <p className="font-display text-[1.75rem] font-semibold leading-none tracking-tight text-primary_container">
-              Kinetic Vault
-            </p>
-            <p className="mt-1 text-[10px] uppercase tracking-[0.24em] text-[#728090]">
-              Pro Trader Tier
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-1.5">
-        <SidebarItem icon={<LayoutDashboard size={16} />} label="Dashboard" />
-        <SidebarItem
-          icon={<BookOpen size={16} />}
-          label="Trade Journal"
-          active
-        />
-        <SidebarItem icon={<Plus size={16} />} label="Add Trade" />
-        <SidebarItem icon={<LineChart size={16} />} label="Analytics" />
-      </div>
-
-      <div className="mt-auto space-y-6 px-2">
-        <button
-          className="w-full rounded-md bg-primary_container px-4 py-2.5 text-sm font-semibold text-on_primary_fixed transition hover:bg-primary_fixed_dim"
-          type="button"
-        >
-          Deposit Funds
-        </button>
-
-        <div className="space-y-3 pb-2">
-          <button
-            className="flex items-center gap-3 text-sm text-[#6f7680] transition hover:text-on_surface"
-            type="button"
-          >
-            <BookOpen size={16} />
-            Support
-          </button>
-          <button
-            className="flex items-center gap-3 text-sm text-[#6f7680] transition hover:text-on_surface"
-            type="button"
-          >
-            <LogOut size={16} />
-            Sign Out
-          </button>
-        </div>
-      </div>
-    </aside>
-  );
-}
 
 function TopNavigation(): React.JSX.Element {
   return (
@@ -505,7 +419,7 @@ export function TradeJournal(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-surface text-on_surface">
       <div className="mx-auto flex max-w-[1440px]">
-        <Sidebar />
+        <AppSidebar activeItem="trade-journal" />
 
         <main className="w-full px-6 pb-8 md:px-8 lg:px-10">
           <TopNavigation />
