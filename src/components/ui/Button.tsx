@@ -8,17 +8,18 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const baseStyles =
-  "inline-flex items-center justify-center gap-2 font-semibold transition outline-none focus-visible:ring-1 focus-visible:ring-primary_container/20 disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex items-center justify-center gap-2 font-sans font-semibold transition outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--primary-container)]/20 disabled:pointer-events-none disabled:opacity-50";
 
 const variantStyles: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-gradient-to-r from-primary_container to-primary_fixed_dim text-on_primary_fixed hover:brightness-105 active:scale-[0.99] shadow-ambient",
+    "bg-[linear-gradient(90deg,var(--primary-container),var(--primary-fixed-dim))] text-[color:var(--on-primary-fixed)] hover:brightness-105 active:scale-[0.99] shadow-ambient",
   secondary:
-    "bg-secondary_container text-on_secondary_container hover:brightness-105 active:scale-[0.99]",
-  tertiary: "bg-transparent text-surface_tint hover:text-primary_container",
+    "bg-secondary_container text-[color:var(--on-secondary-container)] hover:brightness-105 active:scale-[0.99]",
+  tertiary:
+    "bg-transparent text-[color:var(--surface-tint)] hover:text-[color:var(--primary-container)]",
   surface:
-    "bg-surface_container text-on_surface hover:bg-surface_container_highest",
-  icon: "bg-surface_container text-on_surface_variant hover:bg-surface_container_highest hover:text-on_surface",
+    "bg-surface_container text-[color:var(--on-surface)] hover:bg-surface_container_highest",
+  icon: "bg-surface_container text-[color:var(--on-surface-variant)] hover:bg-surface_container_highest hover:text-[color:var(--on-surface)]",
 };
 
 const sizeStyles: Record<NonNullable<ButtonProps["size"]>, string> = {
