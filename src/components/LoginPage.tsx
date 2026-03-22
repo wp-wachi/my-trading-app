@@ -1,17 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-
-interface InputFieldProps {
-  id: string;
-  label: string;
-  placeholder: string;
-  type?: "text" | "email" | "password";
-  trailingLink?: {
-    label: string;
-    href: string;
-  };
-}
+import { TextInput } from "@/components/ui/Field";
 
 function BrandHeader(): React.JSX.Element {
   return (
@@ -29,45 +19,6 @@ function BrandHeader(): React.JSX.Element {
         PRECISION ASSET TERMINAL v4.2
       </p>
     </header>
-  );
-}
-
-function InputField({
-  id,
-  label,
-  placeholder,
-  type = "text",
-  trailingLink,
-}: InputFieldProps): React.JSX.Element {
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-end justify-between">
-        <label
-          className="block font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-on_surface_variant"
-          htmlFor={id}
-        >
-          {label}
-        </label>
-        {trailingLink ? (
-          <Link
-            className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-primary_container transition hover:text-primary_fixed"
-            href={trailingLink.href}
-          >
-            {trailingLink.label}
-          </Link>
-        ) : null}
-      </div>
-
-      <div className="group relative">
-        <input
-          className="w-full rounded-lg bg-surface_container_low px-4 py-3 text-sm text-on_surface placeholder:text-on_surface_variant/40 outline-none transition focus:bg-surface_container_highest"
-          id={id}
-          placeholder={placeholder}
-          type={type}
-        />
-        <div className="pointer-events-none absolute inset-0 rounded-lg border border-[color:var(--outline-variant)]/10 group-focus-within:border-primary_container/20" />
-      </div>
-    </div>
   );
 }
 
@@ -126,20 +77,27 @@ function LoginCard(): React.JSX.Element {
       </div>
 
       <form className="space-y-6">
-        <InputField
-          id="email"
+        <TextInput
           label="Terminal Identity"
           placeholder="email@kinetic-vault.com"
+          tone="low"
           type="email"
         />
 
-        <InputField
-          id="password"
-          label="Access Key"
-          placeholder="••••••••••••"
-          type="password"
-          trailingLink={{ label: "Forgot?", href: "#" }}
-        />
+        <div className="space-y-1.5">
+          <div className="flex items-end justify-between">
+            <span className="block font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-on_surface_variant">
+              Access Key
+            </span>
+            <Link
+              className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-primary_container transition hover:text-primary_fixed"
+              href="#"
+            >
+              Forgot?
+            </Link>
+          </div>
+          <TextInput placeholder="••••••••••••" tone="low" type="password" />
+        </div>
 
         <Button
           className="w-full py-3.5 font-display text-sm font-bold tracking-[0.04em]"
