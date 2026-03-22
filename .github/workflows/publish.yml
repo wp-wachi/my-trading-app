@@ -1,0 +1,50 @@
+name: Build and Publish to GHCR
+
+on:
+  push:
+    branches: [ main ] # รันเฉพาะเวลา push ขึ้น main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }} # จะได้ชื่อ username/my-trading-app โดยอัตโนมัติ
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # สำคัญมาก: เพื่อให้มีสิทธิ์เขียนไฟล์ลง GHCR
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 1. Login เข้าสู่ GitHub Container Registry
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }} # GitHub สร้างให้เอง ไม่ต้องตั้งค่า Secret เพิ่ม
+
+      # 2. เตรียม Metadata (Tags เช่น :main, :latest)
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,format=short
+
+      # 3. Build และ Push ขึ้น GHCR
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.meta.outputs.tags }}
+          labels: ${{ env.meta.outputs.labels }}
+          # ช่วยให้การ build ครั้งต่อไปเร็วขึ้นด้วย cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
