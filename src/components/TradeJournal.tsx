@@ -22,7 +22,8 @@ interface MetricCardProps {
   children?: React.ReactNode;
 }
 
-interface TradeRow {
+export interface TradeJournalRow {
+  id: string;
   date: string;
   time: string;
   asset: string;
@@ -35,68 +36,16 @@ interface TradeRow {
   symbol: string;
 }
 
-const trades: TradeRow[] = [
-  {
-    date: "Oct 24, 2023",
-    time: "14:20",
-    asset: "BTC / USD",
-    side: "BUY",
-    entryPrice: "$34,210.50",
-    exitPrice: "$35,120.00",
-    pnl: "+$909.50",
-    status: "CLOSED",
-    badgeColor: "bg-amber-500/20 text-amber-300",
-    symbol: "B",
-  },
-  {
-    date: "Oct 24, 2023",
-    time: "11:05",
-    asset: "ETH / USD",
-    side: "SELL",
-    entryPrice: "$1,850.25",
-    exitPrice: "$1,865.10",
-    pnl: "-$14.85",
-    status: "CLOSED",
-    badgeColor: "bg-indigo-500/20 text-indigo-300",
-    symbol: "E",
-  },
-  {
-    date: "Oct 23, 2023",
-    time: "23:45",
-    asset: "AAPL",
-    side: "BUY",
-    entryPrice: "$173.44",
-    exitPrice: "--",
-    pnl: "+$2.12",
-    status: "OPEN",
-    badgeColor: "bg-slate-400/20 text-slate-200",
-    symbol: "I",
-  },
-  {
-    date: "Oct 23, 2023",
-    time: "09:12",
-    asset: "BTC / USD",
-    side: "SELL",
-    entryPrice: "$33,850.00",
-    exitPrice: "$33,200.00",
-    pnl: "+$650.00",
-    status: "CLOSED",
-    badgeColor: "bg-amber-500/20 text-amber-300",
-    symbol: "B",
-  },
-  {
-    date: "Oct 22, 2023",
-    time: "18:30",
-    asset: "SOL / USD",
-    side: "BUY",
-    entryPrice: "$28.15",
-    exitPrice: "$32.50",
-    pnl: "+$4.35",
-    status: "CLOSED",
-    badgeColor: "bg-emerald-500/20 text-emerald-300",
-    symbol: "S",
-  },
-];
+export interface TradeJournalMetrics {
+  totalPnl: string;
+  winRate: string;
+  totalTrades: number;
+}
+
+interface TradeJournalProps {
+  trades: TradeJournalRow[];
+  metrics: TradeJournalMetrics;
+}
 
 function TopNavigation(): React.JSX.Element {
   return (
@@ -158,7 +107,7 @@ function MetricCard({
     accent === "green"
       ? "text-primary_container"
       : accent === "red"
-        ? "text-[#ff9da7]"
+        ? "text-secondary_container"
         : "text-on_surface";
 
   return (
@@ -179,44 +128,21 @@ function MetricCard({
   );
 }
 
-function Metrics(): React.JSX.Element {
+function Metrics({
+  metrics,
+}: {
+  metrics: TradeJournalMetrics;
+}): React.JSX.Element {
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1.2fr_1.2fr_0.8fr_1.6fr]">
+      <MetricCard title="Total P/L" value={metrics.totalPnl} accent="green" />
+      <MetricCard title="Win Rate" value={metrics.winRate} />
       <MetricCard
-        title="Total P/L"
-        value="+$12,482.00"
-        subtitle="↗ 14.2% Monthly"
-        accent="green"
+        title="Trades"
+        value={String(metrics.totalTrades)}
+        subtitle="All records"
       />
-
-      <MetricCard title="Win Rate" value="68.4%">
-        <div className="mt-3 h-[3px] w-full rounded-full bg-[#2c3238]">
-          <div className="h-[3px] w-[68%] rounded-full bg-primary_container" />
-        </div>
-      </MetricCard>
-
-      <MetricCard title="Trades" value="142" subtitle="Last 30 days" />
-
-      <MetricCard title="Current Drawdown" value="-2.1%" accent="red">
-        <svg
-          className="mt-3 h-10 w-28"
-          viewBox="0 0 120 40"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M2 28 C 18 8, 28 35, 44 17 S 72 4, 84 30 S 105 20, 116 8"
-            fill="none"
-            stroke="#f4a1aa"
-            strokeWidth="2"
-          />
-          <path
-            d="M108 7 L112 0 L114 12"
-            fill="none"
-            stroke="#f4a1aa"
-            strokeWidth="2"
-          />
-        </svg>
-      </MetricCard>
+      <MetricCard title="Current Drawdown" value="--" accent="red" />
     </div>
   );
 }
@@ -278,21 +204,25 @@ function TradeTableHeader(): React.JSX.Element {
   );
 }
 
-function TradeTableRow({ row }: { row: TradeRow }): React.JSX.Element {
+function TradeTableRow({ row }: { row: TradeJournalRow }): React.JSX.Element {
   const sideClass =
     row.side === "BUY"
       ? "text-primary_container bg-primary_container/15"
-      : "text-[#ff8f99] bg-[#ff8f99]/15";
+      : "text-secondary_container bg-secondary_container/15";
+
   const pnlClass = row.pnl.startsWith("-")
-    ? "text-[#ff9aa4]"
-    : "text-primary_container";
+    ? "text-secondary_container"
+    : row.pnl === "--"
+      ? "text-on_surface_variant"
+      : "text-primary_container";
+
   const statusClass =
     row.status === "OPEN"
       ? "bg-primary_container/15 text-primary_container"
       : "bg-surface_container_high text-[#9da6af]";
 
   return (
-    <div className="grid grid-cols-[1.2fr_1fr_0.65fr_1fr_1fr_0.9fr_0.85fr_0.55fr] items-center rounded-md bg-surface_container px-4 py-5 text-sm text-on_surface transition hover:bg-surface_container_highest/40">
+    <div className="grid grid-cols-[1.2fr_1fr_0.65fr_1fr_1fr_0.9fr_0.85fr_0.55fr] items-center rounded-md bg-surface_container px-4 py-5 text-sm text-on_surface transition hover:bg-surface_container_highest">
       <div>
         <p className="text-[1rem] text-[#b7bfc7]">{row.date}</p>
         <p className="text-[1rem] text-[#b7bfc7]">{row.time}</p>
@@ -315,9 +245,9 @@ function TradeTableRow({ row }: { row: TradeRow }): React.JSX.Element {
         </span>
       </div>
 
-      <p className="text-[#d6dbe0]">{row.entryPrice}</p>
-      <p className="text-[#d6dbe0]">{row.exitPrice}</p>
-      <p className={`font-semibold ${pnlClass}`}>{row.pnl}</p>
+      <p className="font-display text-[#d6dbe0]">{row.entryPrice}</p>
+      <p className="font-display text-[#d6dbe0]">{row.exitPrice}</p>
+      <p className={`font-display font-semibold ${pnlClass}`}>{row.pnl}</p>
 
       <div>
         <span
@@ -337,26 +267,37 @@ function TradeTableRow({ row }: { row: TradeRow }): React.JSX.Element {
   );
 }
 
-function TradeTable(): React.JSX.Element {
+function TradeTable({
+  trades,
+}: {
+  trades: TradeJournalRow[];
+}): React.JSX.Element {
   return (
     <section className="mt-6 overflow-hidden rounded-lg bg-surface_container_lowest/55">
       <TradeTableHeader />
       <div className="space-y-2 px-2 pb-2">
         {trades.map((row) => (
-          <TradeTableRow
-            key={`${row.date}-${row.time}-${row.asset}`}
-            row={row}
-          />
+          <TradeTableRow key={row.id} row={row} />
         ))}
       </div>
     </section>
   );
 }
 
-function Pagination(): React.JSX.Element {
+function Pagination({
+  totalTrades,
+  pageSize,
+}: {
+  totalTrades: number;
+  pageSize: number;
+}): React.JSX.Element {
+  const shown: number = Math.min(totalTrades, pageSize);
+
   return (
     <section className="mt-4 flex items-center justify-between">
-      <p className="text-xs text-[#73808c]">Showing 1 to 5 of 142 trades</p>
+      <p className="text-xs text-[#73808c]">
+        Showing {shown === 0 ? 0 : 1} to {shown} of {totalTrades} trades
+      </p>
       <div className="flex items-center gap-1">
         <Button
           className="h-7 w-7 rounded text-[#8b94a0]"
@@ -371,20 +312,6 @@ function Pagination(): React.JSX.Element {
           variant="primary"
         >
           1
-        </Button>
-        <Button
-          className="h-7 w-7 rounded text-[#8b94a0]"
-          size="icon"
-          variant="surface"
-        >
-          2
-        </Button>
-        <Button
-          className="h-7 w-7 rounded text-[#8b94a0]"
-          size="icon"
-          variant="surface"
-        >
-          3
         </Button>
         <Button
           className="h-7 w-7 rounded text-[#8b94a0]"
@@ -410,7 +337,10 @@ function ActivityToast(): React.JSX.Element {
   );
 }
 
-export function TradeJournal(): React.JSX.Element {
+export function TradeJournal({
+  trades,
+  metrics,
+}: TradeJournalProps): React.JSX.Element {
   return (
     <div className="min-h-screen bg-surface text-on_surface">
       <div className="flex min-h-screen">
@@ -418,10 +348,13 @@ export function TradeJournal(): React.JSX.Element {
 
         <main className="w-full px-6 pb-8 md:px-8 lg:px-10">
           <TopNavigation />
-          <Metrics />
+          <Metrics metrics={metrics} />
           <Filters />
-          <TradeTable />
-          <Pagination />
+          <TradeTable trades={trades} />
+          <Pagination
+            pageSize={trades.length}
+            totalTrades={metrics.totalTrades}
+          />
           <ActivityToast />
         </main>
       </div>
