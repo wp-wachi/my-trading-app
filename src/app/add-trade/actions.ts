@@ -1,6 +1,7 @@
 "use server";
 
 import { Prisma, TradeSide, TradeStatus } from "@prisma/client";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 interface AddTradeValues {
@@ -26,7 +27,6 @@ interface AddTradeValues {
 }
 
 interface AddTradeFieldErrors {
-  userId?: string;
   assetPair?: string;
   side?: string;
   entryPrice?: string;
@@ -55,7 +55,7 @@ function readString(formData: FormData, key: string): string {
 }
 
 const EMPTY_VALUES: AddTradeValues = {
-  userId: "demo-user-id",
+  userId: "",
   openedAt: "",
   closedAt: "",
   session: "London",
@@ -83,7 +83,8 @@ function mapPrismaError(
     return {
       code: "FOREIGN_KEY_CONSTRAINT",
       message: "Unable to save trade.",
-      details: "The selected user reference is invalid. Please sign in again.",
+      details:
+        "The authenticated user record was not found. Please sign out and sign in with Google again.",
     };
   }
 
@@ -106,8 +107,11 @@ export async function createTradeAction(
   _prevState: AddTradeFormState,
   formData: FormData,
 ): Promise<AddTradeFormState> {
+  const session = await auth();
+  const authenticatedUserId: string | undefined = session?.user?.id;
+
   const values: AddTradeValues = {
-    userId: readString(formData, "userId"),
+    userId: authenticatedUserId ?? "",
     openedAt: readString(formData, "openedAt"),
     closedAt: readString(formData, "closedAt"),
     session: readString(formData, "session"),
@@ -128,9 +132,18 @@ export async function createTradeAction(
     notes: readString(formData, "notes"),
   };
 
+  if (!authenticatedUserId) {
+    return {
+      status: "error",
+      message: "Authentication required.",
+      code: "AUTH_REQUIRED",
+      details: "Please sign in with Google before creating a trade.",
+      values,
+    };
+  }
+
   const fieldErrors: AddTradeFieldErrors = {};
 
-  if (!values.userId) fieldErrors.userId = "User ID is required.";
   if (!values.assetPair) fieldErrors.assetPair = "Asset pair is required.";
   if (!values.entryPrice || Number.isNaN(Number(values.entryPrice))) {
     fieldErrors.entryPrice = "Valid entry price is required.";
@@ -164,7 +177,7 @@ export async function createTradeAction(
   try {
     await prisma.trade.create({
       data: {
-        userId: values.userId,
+        userId: authenticatedUserId,
         assetPair: values.assetPair,
         side,
         entryPrice: new Prisma.Decimal(values.entryPrice),

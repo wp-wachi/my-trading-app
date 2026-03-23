@@ -353,8 +353,6 @@ export function AddTradePage(): React.JSX.Element {
 
         <div className="mx-auto max-w-7xl px-12 py-12">
           <form action={formAction} className="grid grid-cols-12 gap-8">
-            <input name="userId" type="hidden" value="demo-user-id" />
-
             <div className="col-span-12 space-y-8 lg:col-span-8">
               <TimingSessionSection />
               <AssetContextSection />
