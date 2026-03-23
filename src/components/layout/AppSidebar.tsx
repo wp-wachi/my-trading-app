@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   BookOpen,
@@ -9,6 +11,7 @@ import {
   LogOut,
   Plus,
 } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
 import type { ReactNode } from "react";
 
@@ -62,6 +65,10 @@ const NAV_ITEMS: SidebarItem[] = [
 ];
 
 export function AppSidebar({ activeItem }: AppSidebarProps): React.JSX.Element {
+  async function handleSignOut(): Promise<void> {
+    await signOut({ redirectTo: "/login" });
+  }
+
   return (
     <aside className="sticky top-0 hidden h-screen w-64 min-w-64 shrink-0 basis-64 flex-col overflow-hidden overscroll-none bg-surface_container_lowest py-8 md:flex">
       <div className="mb-10 px-6">
@@ -121,13 +128,18 @@ export function AppSidebar({ activeItem }: AppSidebarProps): React.JSX.Element {
             <HelpCircle size={16} />
             Support
           </button>
-          <button
-            className="flex items-center gap-4 px-4 py-3 font-sans text-[0.875rem] font-medium text-on_surface_variant/70 transition hover:text-on_surface"
+
+          <Button
+            className="justify-start px-4 py-3 text-[0.875rem] font-medium text-on_surface_variant/70 shadow-none hover:bg-transparent hover:text-on_surface"
+            fullWidth
+            onClick={handleSignOut}
+            size="md"
             type="button"
+            variant="tertiary"
           >
             <LogOut size={16} />
             Sign Out
-          </button>
+          </Button>
         </div>
       </div>
     </aside>
