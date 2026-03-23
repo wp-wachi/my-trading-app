@@ -1,7 +1,4 @@
-import Link from "next/link";
-import { ArrowRight, Terminal } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { TextInput } from "@/components/ui/Field";
+import { Terminal } from "lucide-react";
 
 function BrandHeader(): React.JSX.Element {
   return (
@@ -19,18 +16,6 @@ function BrandHeader(): React.JSX.Element {
         PRECISION ASSET TERMINAL v4.2
       </p>
     </header>
-  );
-}
-
-function OrDivider(): React.JSX.Element {
-  return (
-    <div className="relative flex items-center py-2">
-      <div className="h-px flex-1 bg-[color:var(--outline-variant)]/10" />
-      <span className="mx-4 font-sans text-[0.625rem] tracking-[0.2em] text-on_surface_variant/50">
-        OR
-      </span>
-      <div className="h-px flex-1 bg-[color:var(--outline-variant)]/10" />
-    </div>
   );
 }
 
@@ -76,80 +61,10 @@ function LoginCard(): React.JSX.Element {
         </p>
       </div>
 
-      <form className="space-y-6">
-        <TextInput
-          label="Terminal Identity"
-          placeholder="email@kinetic-vault.com"
-          tone="low"
-          type="email"
-        />
-
-        <div className="space-y-1.5">
-          <div className="flex items-end justify-between">
-            <span className="block font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-on_surface_variant">
-              Access Key
-            </span>
-            <Link
-              className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-primary_container transition hover:text-primary_fixed"
-              href="#"
-            >
-              Forgot?
-            </Link>
-          </div>
-          <TextInput placeholder="••••••••••••" tone="low" type="password" />
-        </div>
-
-        <Button
-          className="w-full py-3.5 font-display text-sm font-bold tracking-[0.04em]"
-          type="submit"
-          variant="primary"
-        >
-          <span>INITIALIZE SESSION</span>
-          <ArrowRight className="h-4 w-4" />
-        </Button>
-
-        <OrDivider />
-
+      <div className="space-y-6">
         <GoogleDisabledButton />
-      </form>
-    </div>
-  );
-}
-
-function FooterLinks(): React.JSX.Element {
-  return (
-    <footer className="mt-8 space-y-4 text-center">
-      <p className="text-sm text-on_surface_variant">
-        Don&apos;t have an account?{" "}
-        <Link
-          className="font-semibold text-primary_container underline-offset-4 decoration-primary_container/30 hover:underline"
-          href="#"
-        >
-          Sign Up
-        </Link>
-      </p>
-
-      <div className="flex items-center justify-center gap-6 border-t border-[color:var(--outline-variant)]/5 pt-4">
-        <Link
-          className="text-[0.625rem] uppercase tracking-[0.14em] text-on_surface_variant/50 hover:text-on_surface"
-          href="#"
-        >
-          Privacy Protocol
-        </Link>
-        <Link
-          className="text-[0.625rem] uppercase tracking-[0.14em] text-on_surface_variant/50 hover:text-on_surface"
-          href="#"
-        >
-          System Status
-        </Link>
-        <Link
-          className="text-[0.625rem] uppercase tracking-[0.14em] text-on_surface_variant/50 hover:text-on_surface"
-          href="#"
-        >
-          Support
-        </Link>
       </div>
-    </footer>
+    </div>
   );
 }
 
@@ -179,7 +94,6 @@ export function LoginPage(): React.JSX.Element {
       <main className="w-full max-w-[420px]">
         <BrandHeader />
         <LoginCard />
-        <FooterLinks />
       </main>
     </div>
   );
