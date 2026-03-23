@@ -2,35 +2,50 @@ import { ChevronDown } from "lucide-react";
 
 interface FieldLabelProps {
   text: string;
+  htmlFor?: string;
+  className?: string;
 }
 
 interface TextInputProps {
-  label?: string;
-  placeholder?: string;
-  type?: "text" | "number" | "datetime-local" | "email" | "password";
-  useDisplayFont?: boolean;
+  label: string;
+  name?: string;
   id?: string;
-  tone?: "low" | "raised";
+  placeholder?: string;
+  type?: React.HTMLInputTypeAttribute;
+  useDisplayFont?: boolean;
+  className?: string;
 }
 
 interface SelectInputProps {
   label: string;
   options: string[];
+  name?: string;
   id?: string;
-  tone?: "low" | "raised";
+  defaultValue?: string;
+  className?: string;
 }
 
 interface TextareaInputProps {
   label: string;
+  name?: string;
+  id?: string;
   placeholder?: string;
   rows?: number;
-  id?: string;
-  tone?: "low" | "raised";
+  className?: string;
 }
 
-export function FieldLabel({ text }: FieldLabelProps): React.JSX.Element {
+export function FieldLabel({
+  text,
+  htmlFor,
+  className,
+}: FieldLabelProps): React.JSX.Element {
   return (
-    <label className="ml-1 block font-sans text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-on_surface_variant">
+    <label
+      htmlFor={htmlFor}
+      className={
+        className ?? "mb-2 block text-xs font-semibold text-on_surface_variant"
+      }
+    >
       {text}
     </label>
   );
@@ -46,20 +61,24 @@ const toneStyles = {
 
 export function TextInput({
   label,
+  name,
+  id,
   placeholder,
   type = "text",
   useDisplayFont = false,
-  id,
-  tone = "raised",
+  className,
 }: TextInputProps): React.JSX.Element {
+  const fieldId: string = id ?? label.toLowerCase().replace(/\s+/g, "-");
+
   return (
-    <div className="space-y-2">
-      {label ? <FieldLabel text={label} /> : null}
+    <div>
+      <FieldLabel htmlFor={fieldId} text={label} />
       <input
-        id={id}
-        className={`${controlBase} ${toneStyles[tone]} text-sm ${useDisplayFont ? "font-display font-medium" : "font-sans font-medium"}`}
+        id={fieldId}
+        name={name}
         placeholder={placeholder}
         type={type}
+        className={className}
       />
     </div>
   );
@@ -68,42 +87,51 @@ export function TextInput({
 export function SelectInput({
   label,
   options,
+  name,
   id,
-  tone = "raised",
+  defaultValue,
+  className,
 }: SelectInputProps): React.JSX.Element {
+  const fieldId: string = id ?? label.toLowerCase().replace(/\s+/g, "-");
+
   return (
-    <div className="space-y-2">
-      <FieldLabel text={label} />
-      <div className="relative">
-        <select
-          id={id}
-          className={`${controlBase} ${toneStyles[tone]} appearance-none pr-10 text-sm font-medium cursor-pointer`}
-        >
-          {options.map((option) => (
-            <option key={option}>{option}</option>
-          ))}
-        </select>
-        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on_surface_variant" />
-      </div>
+    <div>
+      <FieldLabel htmlFor={fieldId} text={label} />
+      <select
+        id={fieldId}
+        name={name}
+        defaultValue={defaultValue}
+        className={className}
+      >
+        {options.map((option: string) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
 
 export function TextareaInput({
   label,
+  name,
+  id,
   placeholder,
   rows = 4,
-  id,
-  tone = "raised",
+  className,
 }: TextareaInputProps): React.JSX.Element {
+  const fieldId: string = id ?? label.toLowerCase().replace(/\s+/g, "-");
+
   return (
-    <div className="space-y-2">
-      <FieldLabel text={label} />
+    <div>
+      <FieldLabel htmlFor={fieldId} text={label} />
       <textarea
-        id={id}
-        rows={rows}
-        className={`${controlBase} ${toneStyles[tone]} resize-none py-4 text-sm font-sans leading-relaxed`}
+        id={fieldId}
+        name={name}
         placeholder={placeholder}
+        rows={rows}
+        className={className}
       />
     </div>
   );

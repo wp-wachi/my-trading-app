@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Bell,
   Camera,
@@ -18,6 +20,11 @@ import {
   TextInput,
   TextareaInput,
 } from "@/components/ui/Field";
+import { useActionState } from "react";
+import {
+  createTradeAction,
+  type AddTradeFormState,
+} from "@/app/add-trade/actions";
 
 interface SectionCardProps {
   title: string;
@@ -91,13 +98,22 @@ function HeaderBar(): React.JSX.Element {
   );
 }
 
+const initialState: AddTradeFormState = {
+  status: "idle",
+  message: "",
+};
+
 function TimingSessionSection(): React.JSX.Element {
   return (
     <SectionCard icon={<Clock3 className="h-5 w-5" />} title="Timing & Session">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <TextInput label="Time Opened" type="datetime-local" />
-        <TextInput label="Time Closed" type="datetime-local" />
-        <SelectInput label="Session" options={["London", "New York", "Asia"]} />
+        <TextInput label="Time Opened" name="openedAt" type="datetime-local" />
+        <TextInput label="Time Closed" name="closedAt" type="datetime-local" />
+        <SelectInput
+          label="Session"
+          name="session"
+          options={["London", "New York", "Asia"]}
+        />
       </div>
     </SectionCard>
   );
@@ -109,18 +125,22 @@ function AssetContextSection(): React.JSX.Element {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
         <SelectInput
           label="Pair"
+          name="assetPair"
           options={["BTC/USDT", "ETH/USDT", "XAU/USD", "EUR/USD"]}
         />
         <SelectInput
           label="Timeframe (TF)"
+          name="timeframe"
           options={["1M", "5M", "15M", "1H", "4H", "1D"]}
         />
         <SelectInput
           label="HTF Trend"
+          name="htfTrend"
           options={["Bullish", "Bearish", "Neutral/Ranging"]}
         />
         <SelectInput
           label="Market Structure"
+          name="marketStructure"
           options={["BOS (Bullish)", "BOS (Bearish)", "CHOCH", "Consolidation"]}
         />
       </div>
@@ -135,29 +155,37 @@ function ExecutionSection(): React.JSX.Element {
       title="Execution Parameters"
     >
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        <SelectInput label="Type" options={["Long", "Short"]} />
+        <SelectInput label="Side" name="side" options={["BUY", "SELL"]} />
         <TextInput
           label="Entry Price"
+          name="entryPrice"
           placeholder="0.00"
           type="number"
           useDisplayFont
         />
-        <TextInput label="Setup" placeholder="e.g. FVG Mitigation" />
+        <TextInput
+          label="Lot Size"
+          name="lotSize"
+          placeholder="1.00"
+          type="number"
+          useDisplayFont
+        />
+        <TextInput
+          label="Setup"
+          name="strategy"
+          placeholder="e.g. FVG Mitigation"
+        />
         <TextInput
           label="Take Profit (TP)"
+          name="takeProfit"
           placeholder="0.00"
           type="number"
           useDisplayFont
         />
         <TextInput
           label="Stop Loss (SL)"
+          name="stopLoss"
           placeholder="0.00"
-          type="number"
-          useDisplayFont
-        />
-        <TextInput
-          label="Risk (%)"
-          placeholder="1.0"
           type="number"
           useDisplayFont
         />
@@ -174,17 +202,20 @@ function OutcomeSection(): React.JSX.Element {
     >
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <SelectInput
-          label="Result"
-          options={["Win", "Loss", "Break-Even (BE)"]}
+          label="Status"
+          name="status"
+          options={["OPEN", "CLOSED"]}
         />
         <TextInput
           label="Risk:Reward (RR)"
+          name="riskReward"
           placeholder="2.5"
           type="number"
           useDisplayFont
         />
         <TextInput
           label="P/L ($)"
+          name="profitLoss"
           placeholder="0.00"
           type="number"
           useDisplayFont
@@ -218,6 +249,7 @@ function NarrativeSection(): React.JSX.Element {
         <div className="space-y-2">
           <TextareaInput
             label="Trade Reasoning"
+            name="tradeReasoning"
             placeholder="Why did you enter?"
             rows={4}
           />
@@ -225,6 +257,7 @@ function NarrativeSection(): React.JSX.Element {
         <div className="space-y-2">
           <TextareaInput
             label="Post Analysis"
+            name="notes"
             placeholder="Reflections after close..."
             rows={4}
           />
@@ -234,7 +267,11 @@ function NarrativeSection(): React.JSX.Element {
   );
 }
 
-function ActionRow(): React.JSX.Element {
+interface ActionRowProps {
+  isPending: boolean;
+}
+
+function ActionRow({ isPending }: ActionRowProps): React.JSX.Element {
   return (
     <div className="col-span-12 mb-24 flex items-center justify-end gap-6 pt-4">
       <button
@@ -245,15 +282,22 @@ function ActionRow(): React.JSX.Element {
       </button>
       <Button
         className="px-12 py-4 font-display text-lg font-black shadow-[0_0_20px_rgba(0,242,150,0.15)] hover:shadow-[0_0_30px_rgba(0,242,150,0.25)]"
+        type="submit"
         variant="primary"
+        disabled={isPending}
       >
-        Save Trade
+        {isPending ? "Saving..." : "Save Trade"}
       </Button>
     </div>
   );
 }
 
 export function AddTradePage(): React.JSX.Element {
+  const [state, formAction, isPending] = useActionState(
+    createTradeAction,
+    initialState,
+  );
+
   return (
     <div className="relative flex min-h-screen bg-surface text-on_surface">
       <AppSidebar activeItem="add-trade" />
@@ -262,7 +306,9 @@ export function AddTradePage(): React.JSX.Element {
         <HeaderBar />
 
         <div className="mx-auto max-w-7xl px-12 py-12">
-          <form className="grid grid-cols-12 gap-8">
+          <form action={formAction} className="grid grid-cols-12 gap-8">
+            <input name="userId" type="hidden" value="demo-user-id" />
+
             <div className="col-span-12 space-y-8 lg:col-span-8">
               <TimingSessionSection />
               <AssetContextSection />
@@ -275,7 +321,21 @@ export function AddTradePage(): React.JSX.Element {
               <NarrativeSection />
             </div>
 
-            <ActionRow />
+            <div className="col-span-12">
+              {state.message ? (
+                <p
+                  className={`text-sm ${
+                    state.status === "success"
+                      ? "text-primary_container"
+                      : "text-secondary_container"
+                  }`}
+                >
+                  {state.message}
+                </p>
+              ) : null}
+            </div>
+
+            <ActionRow isPending={isPending} />
           </form>
         </div>
 
