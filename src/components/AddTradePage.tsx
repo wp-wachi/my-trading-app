@@ -101,18 +101,50 @@ function HeaderBar(): React.JSX.Element {
 const initialState: AddTradeFormState = {
   status: "idle",
   message: "",
+  values: {
+    userId: "demo-user-id",
+    openedAt: "",
+    closedAt: "",
+    session: "London",
+    assetPair: "BTC/USDT",
+    timeframe: "15M",
+    htfTrend: "Neutral/Ranging",
+    marketStructure: "Consolidation",
+    side: "BUY",
+    entryPrice: "",
+    lotSize: "",
+    strategy: "",
+    takeProfit: "",
+    stopLoss: "",
+    status: "OPEN",
+    riskReward: "",
+    profitLoss: "",
+    tradeReasoning: "",
+    notes: "",
+  },
 };
 
 function TimingSessionSection(): React.JSX.Element {
   return (
     <SectionCard icon={<Clock3 className="h-5 w-5" />} title="Timing & Session">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <TextInput label="Time Opened" name="openedAt" type="datetime-local" />
-        <TextInput label="Time Closed" name="closedAt" type="datetime-local" />
+        <TextInput
+          label="Time Opened"
+          name="openedAt"
+          type="datetime-local"
+          defaultValue={initialState.values.openedAt}
+        />
+        <TextInput
+          label="Time Closed"
+          name="closedAt"
+          type="datetime-local"
+          defaultValue={initialState.values.closedAt}
+        />
         <SelectInput
           label="Session"
           name="session"
           options={["London", "New York", "Asia"]}
+          defaultValue={initialState.values.session}
         />
       </div>
     </SectionCard>
@@ -127,21 +159,25 @@ function AssetContextSection(): React.JSX.Element {
           label="Pair"
           name="assetPair"
           options={["BTC/USDT", "ETH/USDT", "XAU/USD", "EUR/USD"]}
+          defaultValue={initialState.values.assetPair}
         />
         <SelectInput
           label="Timeframe (TF)"
           name="timeframe"
           options={["1M", "5M", "15M", "1H", "4H", "1D"]}
+          defaultValue={initialState.values.timeframe}
         />
         <SelectInput
           label="HTF Trend"
           name="htfTrend"
           options={["Bullish", "Bearish", "Neutral/Ranging"]}
+          defaultValue={initialState.values.htfTrend}
         />
         <SelectInput
           label="Market Structure"
           name="marketStructure"
           options={["BOS (Bullish)", "BOS (Bearish)", "CHOCH", "Consolidation"]}
+          defaultValue={initialState.values.marketStructure}
         />
       </div>
     </SectionCard>
@@ -162,6 +198,7 @@ function ExecutionSection(): React.JSX.Element {
           placeholder="0.00"
           type="number"
           useDisplayFont
+          defaultValue={initialState.values.entryPrice}
         />
         <TextInput
           label="Lot Size"
@@ -169,11 +206,13 @@ function ExecutionSection(): React.JSX.Element {
           placeholder="1.00"
           type="number"
           useDisplayFont
+          defaultValue={initialState.values.lotSize}
         />
         <TextInput
           label="Setup"
           name="strategy"
           placeholder="e.g. FVG Mitigation"
+          defaultValue={initialState.values.strategy}
         />
         <TextInput
           label="Take Profit (TP)"
@@ -181,6 +220,7 @@ function ExecutionSection(): React.JSX.Element {
           placeholder="0.00"
           type="number"
           useDisplayFont
+          defaultValue={initialState.values.takeProfit}
         />
         <TextInput
           label="Stop Loss (SL)"
@@ -188,6 +228,7 @@ function ExecutionSection(): React.JSX.Element {
           placeholder="0.00"
           type="number"
           useDisplayFont
+          defaultValue={initialState.values.stopLoss}
         />
       </div>
     </SectionCard>
@@ -205,6 +246,7 @@ function OutcomeSection(): React.JSX.Element {
           label="Status"
           name="status"
           options={["OPEN", "CLOSED"]}
+          defaultValue={initialState.values.status}
         />
         <TextInput
           label="Risk:Reward (RR)"
@@ -212,6 +254,7 @@ function OutcomeSection(): React.JSX.Element {
           placeholder="2.5"
           type="number"
           useDisplayFont
+          defaultValue={initialState.values.riskReward}
         />
         <TextInput
           label="P/L ($)"
@@ -219,6 +262,7 @@ function OutcomeSection(): React.JSX.Element {
           placeholder="0.00"
           type="number"
           useDisplayFont
+          defaultValue={initialState.values.profitLoss}
         />
       </div>
     </SectionCard>
@@ -252,6 +296,7 @@ function NarrativeSection(): React.JSX.Element {
             name="tradeReasoning"
             placeholder="Why did you enter?"
             rows={4}
+            defaultValue={initialState.values.tradeReasoning}
           />
         </div>
         <div className="space-y-2">
@@ -260,6 +305,7 @@ function NarrativeSection(): React.JSX.Element {
             name="notes"
             placeholder="Reflections after close..."
             rows={4}
+            defaultValue={initialState.values.notes}
           />
         </div>
       </div>
@@ -331,6 +377,17 @@ export function AddTradePage(): React.JSX.Element {
                   }`}
                 >
                   {state.message}
+                </p>
+              ) : null}
+
+              {state.code ? (
+                <p className="text-xs text-on_surface_variant">
+                  Code: {state.code}
+                </p>
+              ) : null}
+              {state.details ? (
+                <p className="text-xs text-on_surface_variant">
+                  {state.details}
                 </p>
               ) : null}
             </div>

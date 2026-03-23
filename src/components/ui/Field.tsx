@@ -12,6 +12,7 @@ interface TextInputProps {
   id?: string;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
+  defaultValue?: string | number;
   useDisplayFont?: boolean;
   className?: string;
 }
@@ -31,6 +32,7 @@ interface TextareaInputProps {
   id?: string;
   placeholder?: string;
   rows?: number;
+  defaultValue?: string;
   className?: string;
 }
 
@@ -65,6 +67,7 @@ export function TextInput({
   id,
   placeholder,
   type = "text",
+  defaultValue,
   useDisplayFont = false,
   className,
 }: TextInputProps): React.JSX.Element {
@@ -78,6 +81,7 @@ export function TextInput({
         name={name}
         placeholder={placeholder}
         type={type}
+        defaultValue={defaultValue}
         className={className}
       />
     </div>
@@ -119,6 +123,7 @@ export function TextareaInput({
   id,
   placeholder,
   rows = 4,
+  defaultValue,
   className,
 }: TextareaInputProps): React.JSX.Element {
   const fieldId: string = id ?? label.toLowerCase().replace(/\s+/g, "-");
@@ -131,6 +136,7 @@ export function TextareaInput({
         name={name}
         placeholder={placeholder}
         rows={rows}
+        defaultValue={defaultValue}
         className={className}
       />
     </div>

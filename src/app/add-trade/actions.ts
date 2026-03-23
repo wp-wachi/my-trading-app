@@ -3,67 +3,209 @@
 import { Prisma, TradeSide, TradeStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
+interface AddTradeValues {
+  userId: string;
+  openedAt: string;
+  closedAt: string;
+  session: string;
+  assetPair: string;
+  timeframe: string;
+  htfTrend: string;
+  marketStructure: string;
+  side: string;
+  entryPrice: string;
+  lotSize: string;
+  strategy: string;
+  takeProfit: string;
+  stopLoss: string;
+  status: string;
+  riskReward: string;
+  profitLoss: string;
+  tradeReasoning: string;
+  notes: string;
+}
+
+interface AddTradeFieldErrors {
+  userId?: string;
+  assetPair?: string;
+  side?: string;
+  entryPrice?: string;
+  lotSize?: string;
+  closedAt?: string;
+}
+
+interface ActionErrorInfo {
+  code: string;
+  message: string;
+  details: string;
+}
+
 export interface AddTradeFormState {
   status: "idle" | "success" | "error";
   message: string;
+  code?: string;
+  details?: string;
+  values: AddTradeValues;
+  fieldErrors?: AddTradeFieldErrors;
 }
 
-function getValue(formData: FormData, key: string): string {
+function readString(formData: FormData, key: string): string {
   const value: FormDataEntryValue | null = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
+}
+
+const EMPTY_VALUES: AddTradeValues = {
+  userId: "demo-user-id",
+  openedAt: "",
+  closedAt: "",
+  session: "London",
+  assetPair: "BTC/USDT",
+  timeframe: "15M",
+  htfTrend: "Neutral/Ranging",
+  marketStructure: "Consolidation",
+  side: "BUY",
+  entryPrice: "",
+  lotSize: "",
+  strategy: "",
+  takeProfit: "",
+  stopLoss: "",
+  status: "OPEN",
+  riskReward: "",
+  profitLoss: "",
+  tradeReasoning: "",
+  notes: "",
+};
+
+function mapPrismaError(
+  error: Prisma.PrismaClientKnownRequestError,
+): ActionErrorInfo {
+  if (error.code === "P2003") {
+    return {
+      code: "FOREIGN_KEY_CONSTRAINT",
+      message: "Unable to save trade.",
+      details: "The selected user reference is invalid. Please sign in again.",
+    };
+  }
+
+  if (error.code === "P2002") {
+    return {
+      code: "UNIQUE_CONSTRAINT",
+      message: "Unable to save trade.",
+      details: "A duplicate trade was detected for a unique field.",
+    };
+  }
+
+  return {
+    code: error.code,
+    message: "Unable to save trade.",
+    details: "A database constraint error occurred while saving.",
+  };
 }
 
 export async function createTradeAction(
   _prevState: AddTradeFormState,
   formData: FormData,
 ): Promise<AddTradeFormState> {
-  const userId: string = getValue(formData, "userId");
-  const assetPair: string = getValue(formData, "assetPair");
-  const sideInput: string = getValue(formData, "side");
-  const entryPriceInput: string = getValue(formData, "entryPrice");
-  const lotSizeInput: string = getValue(formData, "lotSize");
-  const statusInput: string = getValue(formData, "status");
-  const profitLossInput: string = getValue(formData, "profitLoss");
-  const notes: string = getValue(formData, "notes");
-  const strategy: string = getValue(formData, "strategy");
-  const closedAtInput: string = getValue(formData, "closedAt");
+  const values: AddTradeValues = {
+    userId: readString(formData, "userId"),
+    openedAt: readString(formData, "openedAt"),
+    closedAt: readString(formData, "closedAt"),
+    session: readString(formData, "session"),
+    assetPair: readString(formData, "assetPair"),
+    timeframe: readString(formData, "timeframe"),
+    htfTrend: readString(formData, "htfTrend"),
+    marketStructure: readString(formData, "marketStructure"),
+    side: readString(formData, "side"),
+    entryPrice: readString(formData, "entryPrice"),
+    lotSize: readString(formData, "lotSize"),
+    strategy: readString(formData, "strategy"),
+    takeProfit: readString(formData, "takeProfit"),
+    stopLoss: readString(formData, "stopLoss"),
+    status: readString(formData, "status"),
+    riskReward: readString(formData, "riskReward"),
+    profitLoss: readString(formData, "profitLoss"),
+    tradeReasoning: readString(formData, "tradeReasoning"),
+    notes: readString(formData, "notes"),
+  };
 
-  if (!userId || !assetPair || !entryPriceInput || !lotSizeInput) {
-    return { status: "error", message: "Missing required fields." };
+  const fieldErrors: AddTradeFieldErrors = {};
+
+  if (!values.userId) fieldErrors.userId = "User ID is required.";
+  if (!values.assetPair) fieldErrors.assetPair = "Asset pair is required.";
+  if (!values.entryPrice || Number.isNaN(Number(values.entryPrice))) {
+    fieldErrors.entryPrice = "Valid entry price is required.";
+  }
+  if (!values.lotSize || Number.isNaN(Number(values.lotSize))) {
+    fieldErrors.lotSize = "Valid lot size is required.";
+  }
+  if (values.side !== "BUY" && values.side !== "SELL") {
+    fieldErrors.side = "Side must be BUY or SELL.";
+  }
+  if (values.closedAt && Number.isNaN(new Date(values.closedAt).getTime())) {
+    fieldErrors.closedAt = "Invalid closed time.";
   }
 
-  const side: TradeSide | null =
-    sideInput === "BUY" || sideInput === "SELL"
-      ? (sideInput as TradeSide)
-      : null;
-
-  if (!side) {
-    return { status: "error", message: "Invalid trade side." };
+  if (Object.keys(fieldErrors).length > 0) {
+    return {
+      status: "error",
+      message: "Validation failed.",
+      code: "VALIDATION_ERROR",
+      details: "Please correct highlighted fields and resubmit.",
+      values,
+      fieldErrors,
+    };
   }
 
+  const side: TradeSide =
+    values.side === "SELL" ? TradeSide.SELL : TradeSide.BUY;
   const status: TradeStatus =
-    statusInput === "CLOSED" ? TradeStatus.CLOSED : TradeStatus.OPEN;
+    values.status === "CLOSED" ? TradeStatus.CLOSED : TradeStatus.OPEN;
 
   try {
     await prisma.trade.create({
       data: {
-        userId,
-        assetPair,
+        userId: values.userId,
+        assetPair: values.assetPair,
         side,
-        entryPrice: new Prisma.Decimal(entryPriceInput),
-        lotSize: new Prisma.Decimal(lotSizeInput),
+        entryPrice: new Prisma.Decimal(values.entryPrice),
+        lotSize: new Prisma.Decimal(values.lotSize),
         status,
-        profitLoss: profitLossInput
-          ? new Prisma.Decimal(profitLossInput)
+        profitLoss: values.profitLoss
+          ? new Prisma.Decimal(values.profitLoss)
           : null,
-        notes: notes || null,
-        strategy: strategy || null,
-        closedAt: closedAtInput ? new Date(closedAtInput) : null,
+        strategy: values.strategy || null,
+        notes: values.notes || null,
+        closedAt: values.closedAt ? new Date(values.closedAt) : null,
       },
     });
 
-    return { status: "success", message: "Trade saved successfully." };
-  } catch {
-    return { status: "error", message: "Failed to save trade." };
+    return {
+      status: "success",
+      message: "Trade saved successfully.",
+      code: "TRADE_CREATED",
+      details: "Your trade has been recorded.",
+      values: EMPTY_VALUES,
+    };
+  } catch (error: unknown) {
+    console.error("createTradeAction failed:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      const mapped: ActionErrorInfo = mapPrismaError(error);
+      return {
+        status: "error",
+        message: mapped.message,
+        code: mapped.code,
+        details: mapped.details,
+        values,
+      };
+    }
+
+    return {
+      status: "error",
+      message: "Failed to save trade.",
+      code: "UNKNOWN_ERROR",
+      details: "Unexpected server error. Please try again.",
+      values,
+    };
   }
 }
