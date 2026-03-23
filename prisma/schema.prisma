@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- Auth.js Models (Required for Google Login) ---
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  trades        Trade[]   // Relation to Trade records
+}
+
+// --- Trading Domain Models ---
+
+model Trade {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // ข้อมูลพื้นฐานของการเทรด
+  assetPair     String      // เช่น "XAUUSD"
+  side          TradeSide   // BUY หรือ SELL
+  entryPrice    Decimal     @db.Decimal(18, 5) // ใช้ Decimal แทน Float เพื่อความแม่นยำทางการเงิน
+  exitPrice     Decimal?    @db.Decimal(18, 5)
+  lotSize       Decimal     @db.Decimal(10, 2)
+  
+  // สถานะและผลลัพธ์
+  status        TradeStatus @default(OPEN)
+  profitLoss    Decimal?    @db.Decimal(18, 2) // กำไร/ขาดทุนสุทธิ
+  
+  // กลยุทธ์และการวิเคราะห์ (SMC/SMC-related)
+  strategy      String?     // เช่น "SMC + FVG", "Order Block"
+  notes         String?     @db.Text
+  imageUrl      String?     // ลิงก์รูปกราฟ (TradingView Screenshot)
+  
+  // วันเวลา
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  closedAt      DateTime?   // บันทึกเวลาที่ปิดออเดอร์จริง
+
+  @@index([userId]) // เพิ่ม index เพื่อให้ดึงข้อมูลของแต่ละ User ได้เร็ว
+}
+
+enum TradeSide {
+  BUY
+  SELL
+}
+
+enum TradeStatus {
+  OPEN
+  CLOSED
+}
